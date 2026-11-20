@@ -113,10 +113,6 @@ public final class ClipboardWatchService extends Service {
                 shutdown();
                 return;
             }
-            if (settings.isStayInApp()
-                    && android.provider.Settings.canDrawOverlays(ClipboardWatchService.this)) {
-                ClipboardTracker.refresh(ClipboardWatchService.this);
-            }
             updateOverlay();
             handler.postDelayed(this, POLL_MS);
         }
