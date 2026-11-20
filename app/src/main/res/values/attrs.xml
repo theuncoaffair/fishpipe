@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="tc_bg" format="color" />
+    <attr name="tc_surface" format="color" />
+    <attr name="tc_surface2" format="color" />
+    <attr name="tc_surface3" format="color" />
+    <attr name="tc_primary" format="color" />
+    <attr name="tc_primary_dark" format="color" />
+    <attr name="tc_accent" format="color" />
+    <attr name="tc_text" format="color" />
+    <attr name="tc_text_muted" format="color" />
+    <attr name="tc_text_faint" format="color" />
+    <attr name="tc_divider" format="color" />
+    <attr name="tc_progress_track" format="color" />
+</resources>

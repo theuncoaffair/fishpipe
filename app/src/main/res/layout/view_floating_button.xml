@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/floating_button"
+    android:layout_width="52dp"
+    android:layout_height="52dp"
+    android:background="@drawable/bg_button_primary"
+    android:clipToOutline="true"
+    android:contentDescription="@string/floating_download"
+    android:scaleType="centerInside"
+    android:src="@drawable/ic_download" />

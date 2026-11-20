@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.theuncoaffair.fishpipe.util.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/type_video"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_video"
+        app:tint="?attr/colorOutline" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:padding="6dp"
+        android:shadowColor="@color/video_shadow"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="3"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_caption" />
+
+    <TextView
+        android:id="@+id/caption_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_photo_counter"
+        android:paddingStart="5dp"
+        android:paddingTop="1dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="1dp"
+        android:text="@string/caption_badge"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_micro"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/more"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="4dp"
+        android:background="@null"
+        android:contentDescription="@string/menu"
+        android:padding="4dp"
+        android:src="@drawable/ic_more"
+        app:tint="?attr/colorPrimary" />
+
+    <ImageView
+        android:id="@+id/type_badge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_type_badge"
+        android:contentDescription="@string/type_video"
+        android:padding="3dp"
+        android:src="@drawable/ic_video"
+        app:tint="@color/white" />
+
+    <FrameLayout
+        android:id="@+id/check_wrap"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="7dp"
+        android:background="@drawable/bg_check_unchecked"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/select"
+            android:padding="4dp"
+            android:src="@drawable/ic_check"
+            app:tint="@color/white"
+            android:visibility="gone" />
+    </FrameLayout>
+</com.theuncoaffair.fishpipe.util.SquareFrameLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/drawer_feedback"
+            android:icon="@drawable/ic_message"
+            android:title="@string/feedback" />
+        <item
+            android:id="@+id/drawer_recommend"
+            android:icon="@drawable/ic_send"
+            android:title="@string/drawer_recommend" />
+        <item
+            android:id="@+id/drawer_how"
+            android:icon="@drawable/ic_open"
+            android:title="@string/drawer_how" />
+        <item
+            android:id="@+id/drawer_whats_new"
+            android:icon="@drawable/ic_whats_new"
+            android:title="@string/drawer_whats_new" />
+        <item
+            android:id="@+id/drawer_group"
+            android:icon="@drawable/ic_link"
+            android:title="@string/drawer_group" />
+        <item
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings" />
+    </group>
+</menu>

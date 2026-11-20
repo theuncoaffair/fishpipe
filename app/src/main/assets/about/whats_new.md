@@ -1,0 +1,20 @@
+# What's new
+
+- Appearance settings now switch immediately between light, dark, and true AMOLED.
+- Annual pass pricing now follows the region selected in Settings.
+- Annual passes now carry a 12-month expiry, with renewal support.
+- Story and slideshow downloads are labelled in players, cards, and history.
+- Links without audio no longer offer a slideshow option.
+- The bottom navigation no longer covers the last row of content.
+- Refreshed the FishPipe brand blue and button shapes.
+- Embedded captions now render reliably into the saved video.
+- Caption embedding keeps running when FishPipe is in the background, restores accurate progress when you return, and alerts you when it finishes.
+- About now shows release notes without duplicate section headings.
+- The Pro card is centered and easier to scan.
+- Videos now resume from your last playback position and keep your repeat mode.
+- Open folder now opens the actual download folder in your file manager.
+- Story downloads show a Story badge beside embedded-caption badges.
+- Media info now shows whether a video was downloaded in SD or HD.
+- Photos-only downloads now select every photo in a photo link.
+- Refreshed the FishPipe logo with a cleaner outline mark.
+- FishPipe can now check for updates and install verified releases in-app.

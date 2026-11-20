@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dismiss_root"
+    android:layout_width="120dp"
+    android:layout_height="125dp"
+    android:clipChildren="false">
+
+    <FrameLayout
+        android:id="@+id/dismiss_slot"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="17dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <ImageView
+            android:id="@+id/dismiss_highlight"
+            android:layout_width="99dp"
+            android:layout_height="99dp"
+            android:layout_gravity="center"
+            android:alpha="0"
+            android:background="@drawable/bg_dismiss_highlight"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/dismiss_target"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:alpha="0.85"
+            android:background="@drawable/bg_dismiss_ring"
+            android:clipToOutline="true"
+            android:contentDescription="@string/dismiss"
+            android:padding="18dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_close" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/dismiss_label"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="105dp"
+        android:alpha="0.85"
+        android:gravity="center"
+        android:text="@string/dismiss"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+</FrameLayout>

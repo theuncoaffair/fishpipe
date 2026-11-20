@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="76dp"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackgroundBorderless"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <com.theuncoaffair.fishpipe.util.CircleImageView
+        android:id="@+id/creator_avatar"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_icon_circle"
+        android:contentDescription="@string/creators_title"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_app" />
+
+    <TextView
+        android:id="@+id/creator_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/text_tiny" />
+</LinearLayout>

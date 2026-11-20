@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/wallpaper_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationContentDescription="@string/close"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/wallpaper_title" />
+
+    <TextView
+        android:id="@+id/wallpaper_hint"
+        style="@style/Text.Body.Muted"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/wallpaper_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaper_toolbar" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/wallpaper_preview_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:cardCornerRadius="@dimen/radius_lg"
+        app:layout_constraintBottom_toTopOf="@id/wallpaper_frame_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaper_hint"
+        app:layout_constraintVertical_weight="1"
+        app:strokeColor="?attr/colorOutlineVariant"
+        app:strokeWidth="1dp">
+
+        <ImageView
+            android:id="@+id/wallpaper_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/wallpaper_title"
+            android:scaleType="centerCrop" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/wallpaper_progress"
+            style="@style/Widget.FishPipe.Loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/wallpaper_frame_label"
+        style="@style/Text.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/frame_time"
+        app:layout_constraintBottom_toTopOf="@id/wallpaper_seek"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaper_preview_card" />
+
+    <TextView
+        android:id="@+id/wallpaper_frame_value"
+        style="@style/Text.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/frame_time"
+        app:layout_constraintBaseline_toBaselineOf="@id/wallpaper_frame_label"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/wallpaper_seek"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:stepSize="1"
+        android:value="0"
+        android:valueFrom="0"
+        android:valueTo="100"
+        app:labelBehavior="gone"
+        app:layout_constraintBottom_toTopOf="@id/wallpaper_set"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaper_frame_label" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/wallpaper_set"
+        style="@style/Button.Primary"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/touch"
+        android:layout_margin="16dp"
+        android:enabled="false"
+        android:text="@string/wallpaper"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaper_seek" />
+</androidx.constraintlayout.widget.ConstraintLayout>

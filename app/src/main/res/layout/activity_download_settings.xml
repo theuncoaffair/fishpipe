@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:navigationContentDescription="@string/close"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="?attr/colorOnSurface"
+        app:title="@string/download_settings"
+        app:titleTextColor="?attr/colorOnSurface" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_24">
+
+            <TextView
+                style="@style/Settings.Section"
+                android:text="@string/download_section" />
+
+            <include
+                android:id="@+id/row_download_path"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_folder_organization"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_default_video"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_default_photos"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_max_tasks"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_speed_limit"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_network"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/Settings.Section"
+                android:text="@string/captions_section" />
+
+            <include
+                android:id="@+id/row_captions_enabled"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/Settings.Note"
+                android:text="@string/captions_download_note" />
+
+            <TextView
+                style="@style/Settings.Note"
+                android:text="@string/captions_enable_desc" />
+
+            <TextView
+                style="@style/Settings.Section"
+                android:text="@string/embed_captions_section" />
+
+            <TextView
+                style="@style/Settings.Note"
+                android:text="@string/embed_captions_desc" />
+
+            <include
+                android:id="@+id/row_toast_embed_start"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_toast_embed_finished"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/Settings.Section"
+                android:text="@string/download_options_section" />
+
+            <include
+                android:id="@+id/row_show_download_options"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/Settings.Note"
+                android:text="@string/show_download_options_desc" />
+
+            <include
+                android:id="@+id/row_toast_download_start"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/row_toast_download_end"
+                layout="@layout/settings_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
