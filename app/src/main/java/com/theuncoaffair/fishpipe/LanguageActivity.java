@@ -13,7 +13,6 @@ import com.theuncoaffair.fishpipe.ui.language.LanguageOption;
 import com.theuncoaffair.fishpipe.ui.language.LanguageUiState;
 import com.theuncoaffair.fishpipe.ui.language.LanguageViewModel;
 import com.theuncoaffair.fishpipe.util.BaseActivity;
-import com.theuncoaffair.fishpipe.util.Ui;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -59,9 +58,6 @@ public final class LanguageActivity extends BaseActivity {
 
     private void select(LanguageOption option) {
         viewModel.select(option.code);
-        if (viewModel.needsFallbackNote(option.code)) {
-            Ui.toast(this, R.string.language_fallback_note);
-        }
         recreate();
         finish();
     }

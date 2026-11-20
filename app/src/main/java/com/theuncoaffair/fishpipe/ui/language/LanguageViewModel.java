@@ -22,15 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 @HiltViewModel
 public final class LanguageViewModel extends ViewModel {
     private static final String[] CODES = {
-            Settings.LANG_SYSTEM, Settings.LANG_EN, Settings.LANG_VI, Settings.LANG_ES,
-            Settings.LANG_PT, Settings.LANG_FR, Settings.LANG_DE, Settings.LANG_IT,
-            Settings.LANG_NL, Settings.LANG_PL, Settings.LANG_RU, Settings.LANG_TR,
-            Settings.LANG_AR, Settings.LANG_HI, Settings.LANG_BN, Settings.LANG_UR,
-            Settings.LANG_FA, Settings.LANG_ID, Settings.LANG_MS, Settings.LANG_TH,
-            Settings.LANG_JA, Settings.LANG_KO, Settings.LANG_ZH, Settings.LANG_FIL,
-            Settings.LANG_SW, Settings.LANG_AM, Settings.LANG_HA, Settings.LANG_YO,
-            Settings.LANG_IG, Settings.LANG_ZU, Settings.LANG_AF, Settings.LANG_SO,
-            Settings.LANG_SN, Settings.LANG_XH
+            Settings.LANG_SYSTEM, Settings.LANG_EN, Settings.LANG_VI
     };
 
     private final SettingsRepository settings;
@@ -59,11 +51,6 @@ public final class LanguageViewModel extends ViewModel {
         state.setValue(build());
     }
 
-    public boolean needsFallbackNote(String code) {
-        return !Settings.LANG_SYSTEM.equals(code)
-                && !Settings.LANG_EN.equals(code)
-                && !Settings.LANG_VI.equals(code);
-    }
 
     private LanguageUiState build() {
         String selected = settings.getLanguage();

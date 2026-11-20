@@ -10,37 +10,6 @@ public final class Settings {
     public static final String LANG_SYSTEM = "system";
     public static final String LANG_EN = "en";
     public static final String LANG_VI = "vi";
-    public static final String LANG_ES = "es";
-    public static final String LANG_PT = "pt";
-    public static final String LANG_FR = "fr";
-    public static final String LANG_DE = "de";
-    public static final String LANG_IT = "it";
-    public static final String LANG_NL = "nl";
-    public static final String LANG_PL = "pl";
-    public static final String LANG_RU = "ru";
-    public static final String LANG_TR = "tr";
-    public static final String LANG_AR = "ar";
-    public static final String LANG_HI = "hi";
-    public static final String LANG_BN = "bn";
-    public static final String LANG_UR = "ur";
-    public static final String LANG_FA = "fa";
-    public static final String LANG_ID = "id";
-    public static final String LANG_MS = "ms";
-    public static final String LANG_TH = "th";
-    public static final String LANG_JA = "ja";
-    public static final String LANG_KO = "ko";
-    public static final String LANG_ZH = "zh";
-    public static final String LANG_FIL = "fil";
-    public static final String LANG_SW = "sw";
-    public static final String LANG_AM = "am";
-    public static final String LANG_HA = "ha";
-    public static final String LANG_YO = "yo";
-    public static final String LANG_IG = "ig";
-    public static final String LANG_ZU = "zu";
-    public static final String LANG_AF = "af";
-    public static final String LANG_SO = "so";
-    public static final String LANG_SN = "sn";
-    public static final String LANG_XH = "xh";
 
     public static final String THEME_SYSTEM = "system";
     public static final String THEME_LIGHT = "light";
@@ -310,7 +279,11 @@ public final class Settings {
     }
 
     public String getLanguage() {
-        return prefs.getString(KEY_LANGUAGE, LANG_SYSTEM);
+        String value = prefs.getString(KEY_LANGUAGE, LANG_SYSTEM);
+        if (LANG_SYSTEM.equals(value) || LANG_EN.equals(value) || LANG_VI.equals(value)) {
+            return value;
+        }
+        return LANG_SYSTEM;
     }
 
     public void setLanguage(String language) {
