@@ -99,12 +99,4 @@
         android:minHeight="@dimen/touch"
         android:text="@string/auto_detect"
         android:textAppearance="?attr/textAppearanceBodyMedium" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switch_auto_download"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/touch"
-        android:text="@string/drawer_auto_download"
-        android:textAppearance="?attr/textAppearanceBodyMedium" />
 </LinearLayout>

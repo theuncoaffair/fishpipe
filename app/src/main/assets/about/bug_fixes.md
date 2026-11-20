@@ -1,5 +1,8 @@
 # Bug fixes
 
+- Fixed embedded captions not appearing on some saved videos.
+- Fixed the update screen retaining an unused manual download path.
+
 - Fixed light, dark, and AMOLED appearance selections not applying to the running app.
 - Fixed true AMOLED not using pure black surfaces.
 - Fixed the How to download dialog showing an unused OK button and a Cancel label.

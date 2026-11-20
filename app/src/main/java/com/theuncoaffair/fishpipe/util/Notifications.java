@@ -17,7 +17,6 @@ public final class Notifications {
     public static final String CHANNEL = "downloads";
     public static final String CHANNEL_DONE = "downloads_done_v2";
     public static final String CHANNEL_START = "downloads_start";
-    public static final String CHANNEL_CLIPBOARD = "clipboard_links";
     public static final String CHANNEL_WATCH = "clipboard_watch";
     public static final int START_ID = 4200;
     public static final int PROGRESS_ID = 4201;
@@ -46,10 +45,6 @@ public final class Notifications {
                 context.getString(R.string.notification_started_channel), NotificationManager.IMPORTANCE_DEFAULT);
         start.setShowBadge(false);
         nm.createNotificationChannel(start);
-        NotificationChannel clipboard = new NotificationChannel(CHANNEL_CLIPBOARD,
-                context.getString(R.string.clipboard_channel), NotificationManager.IMPORTANCE_DEFAULT);
-        clipboard.setShowBadge(false);
-        nm.createNotificationChannel(clipboard);
         NotificationChannel watch = new NotificationChannel(CHANNEL_WATCH,
                 context.getString(R.string.clipboard_watch_channel), NotificationManager.IMPORTANCE_MIN);
         watch.setShowBadge(false);
@@ -66,39 +61,6 @@ public final class Notifications {
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null) return false;
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.N || nm.areNotificationsEnabled();
-    }
-
-    public static void showClipboard(Context context, String url) {
-        if (url == null || url.trim().isEmpty() || !canPost(context)) return;
-        Intent open = new Intent(context, MainActivity.class);
-        open.putExtra(MainActivity.EXTRA_LINK, url);
-        open.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent openPending = PendingIntent.getActivity(context, 4300, open, pendingFlags());
-
-        Intent download = new Intent(context, MainActivity.class);
-        download.putExtra(MainActivity.EXTRA_LINK, url);
-        download.putExtra(MainActivity.EXTRA_AUTO_DOWNLOAD, true);
-        download.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent downloadPending = PendingIntent.getActivity(context, 4301, download, pendingFlags());
-
-        Notification.Builder b = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                ? new Notification.Builder(context, CHANNEL_CLIPBOARD)
-                : new Notification.Builder(context);
-        b.setContentTitle(context.getString(R.string.clipboard_notification_title))
-                .setContentText(context.getString(R.string.clipboard_notification_body))
-                .setStyle(new Notification.BigTextStyle().bigText(url))
-                .setSmallIcon(R.drawable.ic_link)
-                .setContentIntent(openPending)
-                .addAction(android.R.drawable.stat_sys_download,
-                        context.getString(R.string.clipboard_notification_download), downloadPending)
-                .addAction(android.R.drawable.ic_menu_view,
-                        context.getString(R.string.clipboard_notification_open), openPending)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .setCategory(Notification.CATEGORY_RECOMMENDATION)
-                .setVisibility(Notification.VISIBILITY_PUBLIC);
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (nm != null) nm.notify(CLIPBOARD_ID, b.build());
     }
 
     public static void cancelClipboard(Context context) {

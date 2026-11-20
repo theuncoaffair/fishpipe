@@ -298,8 +298,6 @@
     <string name="clipboard_watch_channel">Theo dõi liên kết clipboard</string>
     <string name="clipboard_watch_title">FishPipe đang theo dõi liên kết</string>
     <string name="clipboard_watch_body">Liên kết TikTok đã sao chép sẽ được tải bằng cài đặt mặc định.</string>
-    <string name="clipboard_watch_started">Đã bật tự động tải từ clipboard.</string>
-    <string name="clipboard_watch_stopped">Đã tắt tự động tải từ clipboard.</string>
     <string name="clipboard_empty">Bộ nhớ tạm trống.</string>
     <string name="storage_error">Không thể lưu file vào bộ nhớ.</string>
     <string name="error_generic">Đã xảy ra lỗi.</string>
@@ -365,11 +363,6 @@
     <string name="clipboard_popup_download">Tải xuống</string>
     <string name="clipboard_popup_later">Để sau</string>
     <string name="clipboard_background_limited">Android không cho phép FishPipe đọc clipboard khi TikTok đang hiển thị. FishPipe sẽ kiểm tra lại khi bạn quay lại.</string>
-    <string name="clipboard_channel">Liên kết clipboard</string>
-    <string name="clipboard_notification_title">Đã phát hiện liên kết TikTok</string>
-    <string name="clipboard_notification_body">Tải video này bằng FishPipe hoặc mở ứng dụng.</string>
-    <string name="clipboard_notification_download">Tải video</string>
-    <string name="clipboard_notification_open">Mở ứng dụng</string>
 
     <!-- Insights -->
     <string name="insights_title">Phân tích</string>
@@ -457,9 +450,6 @@
     <string name="download_queued_count">Đã xếp hàng %1$d tệp tải xuống.</string>
     <string name="deleted_count">Đã xoá %1$d mục.</string>
     <string name="drawer_stay_in_app">Tải xuống mà không rời ứng dụng</string>
-    <string name="drawer_auto_download">Tự động tải liên kết đã sao chép</string>
-    <string name="auto_download_links">Tự động tải liên kết đã sao chép</string>
-    <string name="auto_download_links_desc">Khi phát hiện liên kết TikTok mới, tự động tải bằng cài đặt mặc định.</string>
     <string name="drawer_recommend">Giới thiệu cho bạn bè</string>
     <string name="drawer_how">Cách tải xuống</string>
     <string name="drawer_group">Tham gia nhóm góp ý</string>

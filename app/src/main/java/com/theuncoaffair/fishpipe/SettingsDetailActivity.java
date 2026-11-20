@@ -1,7 +1,5 @@
 package com.theuncoaffair.fishpipe;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -45,7 +43,6 @@ public final class SettingsDetailActivity extends BaseActivity {
     private ActivitySettingsDetailBinding binding;
     private SettingsDetailViewModel viewModel;
     private TextView updateStatus;
-    private int lastUpdateNonce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +60,6 @@ public final class SettingsDetailActivity extends BaseActivity {
         else if (KIND_ABOUT.equals(kind)) showAbout();
         else showUpdate();
 
-        SettingsDetailUiState initial = viewModel.getState().getValue();
-        if (initial != null) lastUpdateNonce = initial.resultNonce;
         viewModel.getState().observe(this, this::render);
     }
 
@@ -164,20 +159,6 @@ public final class SettingsDetailActivity extends BaseActivity {
         binding.detailAction.setEnabled(!state.checking);
         if (updateStatus != null) {
             updateStatus.setText(state.updateMessage);
-        }
-        if (state.resultNonce > lastUpdateNonce) {
-            lastUpdateNonce = state.resultNonce;
-            if (!state.downloadUrl.isEmpty()) {
-                openDownloadPage(state.downloadUrl);
-            }
-        }
-    }
-
-    private void openDownloadPage(String url) {
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        } catch (Exception e) {
-            Ui.toast(this, R.string.update_open_failed);
         }
     }
 

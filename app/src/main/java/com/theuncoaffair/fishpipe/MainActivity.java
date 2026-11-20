@@ -51,7 +51,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public final class MainActivity extends BaseActivity {
     public static final String EXTRA_TAB = "extra_tab";
     public static final String EXTRA_LINK = "extra_link";
-    public static final String EXTRA_AUTO_DOWNLOAD = "extra_auto_download";
     public static final int TAB_HOME = 0;
     public static final int TAB_DOWNLOADS = 1;
     public static final int TAB_INSIGHTS = 2;
@@ -70,7 +69,6 @@ public final class MainActivity extends BaseActivity {
     private NavHeaderMainBinding headerBinding;
     private MaterialSwitch staySwitch;
     private MaterialSwitch autoDetectSwitch;
-    private MaterialSwitch autoDownloadSwitch;
     private int currentTab = -1;
     private long lastBack;
     private String appliedLanguage;
@@ -153,7 +151,6 @@ public final class MainActivity extends BaseActivity {
         bindDrawerInsets();
         staySwitch = headerBinding.switchStayInApp;
         autoDetectSwitch = headerBinding.switchAutoDetect;
-        autoDownloadSwitch = headerBinding.switchAutoDownload;
         staySwitch.setOnCheckedChangeListener((button, checked) -> {
             if (bindingSwitches) return;
             if (checked) {
@@ -166,10 +163,6 @@ public final class MainActivity extends BaseActivity {
         autoDetectSwitch.setOnCheckedChangeListener((button, checked) -> {
             if (bindingSwitches) return;
             viewModel.setAutoDetect(checked);
-        });
-        autoDownloadSwitch.setOnCheckedChangeListener((button, checked) -> {
-            if (bindingSwitches) return;
-            viewModel.setAutoDownload(checked);
         });
         binding.navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -217,7 +210,6 @@ public final class MainActivity extends BaseActivity {
         bindingSwitches = true;
         staySwitch.setChecked(state.stayInApp);
         autoDetectSwitch.setChecked(state.autoDetect);
-        autoDownloadSwitch.setChecked(state.autoDownload);
         bindingSwitches = false;
 
         headerBinding.headerStatus.setText(state.pro
@@ -500,10 +492,8 @@ public final class MainActivity extends BaseActivity {
         }
         String shared = intent.getStringExtra(EXTRA_LINK);
         if (shared != null && !shared.trim().isEmpty()) {
-            boolean auto = intent.getBooleanExtra(EXTRA_AUTO_DOWNLOAD, false);
             intent.removeExtra(EXTRA_LINK);
-            intent.removeExtra(EXTRA_AUTO_DOWNLOAD);
-            openLink(shared, null, auto);
+            openLink(shared, null, false);
             return;
         }
         String action = intent.getAction();

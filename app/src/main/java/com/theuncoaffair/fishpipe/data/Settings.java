@@ -110,7 +110,6 @@ public final class Settings {
     private static final String KEY_CAPTION_MODE = "caption_mode";
     private static final String KEY_REGION_CODE = "region_code";
     private static final String KEY_REGION_NAME = "region_name";
-    private static final String KEY_AUTO_DOWNLOAD = "auto_download";
     private static final String KEY_STAY_IN_APP = "stay_in_app";
     private static final String KEY_FLOAT_X = "float_x";
     private static final String KEY_FLOAT_Y = "float_y";
@@ -580,14 +579,6 @@ public final class Settings {
 
     public void setResolverKey(String value) {
         prefs.edit().putString(KEY_RESOLVER_KEY, value == null ? "" : value.trim()).apply();
-    }
-
-    public boolean isAutoDownload() {
-        return prefs.getBoolean(KEY_AUTO_DOWNLOAD, true);
-    }
-
-    public void setAutoDownload(boolean value) {
-        prefs.edit().putBoolean(KEY_AUTO_DOWNLOAD, value).apply();
     }
 
     public boolean isStayInApp() {

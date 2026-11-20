@@ -9,19 +9,16 @@ public final class MainUiState {
     @NonNull public final String theme;
     public final boolean stayInApp;
     public final boolean autoDetect;
-    public final boolean autoDownload;
     public final boolean pro;
     public final int remaining;
     public final int running;
 
     public MainUiState(@NonNull String language, @NonNull String theme, boolean stayInApp,
-                       boolean autoDetect, boolean autoDownload, boolean pro, int remaining,
-                       int running) {
+                       boolean autoDetect, boolean pro, int remaining, int running) {
         this.language = language;
         this.theme = theme;
         this.stayInApp = stayInApp;
         this.autoDetect = autoDetect;
-        this.autoDownload = autoDownload;
         this.pro = pro;
         this.remaining = remaining;
         this.running = running;
@@ -34,7 +31,6 @@ public final class MainUiState {
         MainUiState that = (MainUiState) other;
         return stayInApp == that.stayInApp
                 && autoDetect == that.autoDetect
-                && autoDownload == that.autoDownload
                 && pro == that.pro
                 && remaining == that.remaining
                 && running == that.running
@@ -44,7 +40,6 @@ public final class MainUiState {
 
     @Override
     public int hashCode() {
-        return Objects.hash(language, theme, stayInApp, autoDetect, autoDownload, pro, remaining,
-                running);
+        return Objects.hash(language, theme, stayInApp, autoDetect, pro, remaining, running);
     }
 }

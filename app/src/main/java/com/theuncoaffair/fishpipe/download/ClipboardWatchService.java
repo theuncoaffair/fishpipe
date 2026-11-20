@@ -109,8 +109,7 @@ public final class ClipboardWatchService extends Service {
     private final Runnable tick = new Runnable() {
         @Override
         public void run() {
-            if (!settings.isAutoDetect() && !settings.isStayInApp()
-                    && !settings.isAutoDownload()) {
+            if (!settings.isStayInApp()) {
                 shutdown();
                 return;
             }
@@ -118,7 +117,6 @@ public final class ClipboardWatchService extends Service {
                     && android.provider.Settings.canDrawOverlays(ClipboardWatchService.this)) {
                 ClipboardTracker.refresh(ClipboardWatchService.this);
             }
-            if (settings.isAutoDetect() || settings.isAutoDownload()) checkClipboard();
             updateOverlay();
             handler.postDelayed(this, POLL_MS);
         }
@@ -127,8 +125,7 @@ public final class ClipboardWatchService extends Service {
     public static void sync(Context context) {
         if (context == null) return;
         Settings settings = AppGraph.get(context).settings();
-        if (settings.isAutoDetect() || settings.isStayInApp()
-                || settings.isAutoDownload()) start(context);
+        if (settings.isStayInApp()) start(context);
         else stop(context);
     }
 
@@ -192,8 +189,7 @@ public final class ClipboardWatchService extends Service {
             shutdown();
             return START_NOT_STICKY;
         }
-        if (!settings.isAutoDetect() && !settings.isStayInApp()
-                && !settings.isAutoDownload()) {
+        if (!settings.isStayInApp()) {
             shutdown();
             return START_NOT_STICKY;
         }
@@ -241,8 +237,7 @@ public final class ClipboardWatchService extends Service {
     }
 
     private boolean startForegroundCompat() {
-        Notification notification = Notifications.clipboardWatch(localized,
-                settings.isAutoDetect() || settings.isAutoDownload(),
+        Notification notification = Notifications.clipboardWatch(localized, false,
                 settings.isStayInApp());
         try {
             if (Build.VERSION.SDK_INT >= 34) {
@@ -263,24 +258,6 @@ public final class ClipboardWatchService extends Service {
         hideOverlay();
         stopForeground(true);
         stopSelf();
-    }
-
-    private void checkClipboard() {
-        if (overlaySuspended) return;
-        String text;
-        long timestamp;
-        try {
-            text = Ui.clipboard(this);
-            timestamp = Ui.clipboardTimestamp(this);
-        } catch (Exception e) {
-            return;
-        }
-        if (text == null || text.trim().isEmpty()) return;
-        String url = LinkUtils.findUrl(text);
-        if (url.isEmpty() || !LinkUtils.isSupported(url)) return;
-        if (url.equals(settings.getLastClipboard())
-                && timestamp == settings.getLastClipboardTimestamp()) return;
-        if (settings.isAutoDownload()) ClipboardDownloader.auto(this, text, timestamp);
     }
 
     private void updateOverlay() {

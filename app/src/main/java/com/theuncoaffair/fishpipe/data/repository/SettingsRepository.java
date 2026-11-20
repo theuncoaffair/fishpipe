@@ -22,14 +22,6 @@ public final class SettingsRepository {
         settings.setAutoDetect(value);
     }
 
-    public boolean isAutoDownload() {
-        return settings.isAutoDownload();
-    }
-
-    public void setAutoDownload(boolean value) {
-        settings.setAutoDownload(value);
-    }
-
     public boolean isStayInApp() {
         return settings.isStayInApp();
     }

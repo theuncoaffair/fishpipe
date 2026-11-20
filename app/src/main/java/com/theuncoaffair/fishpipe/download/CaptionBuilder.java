@@ -8,15 +8,40 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaMuxer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.LruCache;
+
+import androidx.annotation.OptIn;
+import androidx.media3.common.Effect;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.Size;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.effect.BitmapOverlay;
+import androidx.media3.effect.OverlayEffect;
+import androidx.media3.effect.OverlaySettings;
+import androidx.media3.effect.TextureOverlay;
+import androidx.media3.transformer.Composition;
+import androidx.media3.transformer.EditedMediaItem;
+import androidx.media3.transformer.Effects;
+import androidx.media3.transformer.ExportException;
+import androidx.media3.transformer.ExportResult;
+import androidx.media3.transformer.ProgressHolder;
+import androidx.media3.transformer.Transformer;
+
+import com.google.common.collect.ImmutableList;
 
 import com.theuncoaffair.fishpipe.data.DownloadEntry;
 import com.theuncoaffair.fishpipe.net.Http;
@@ -41,7 +66,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
+@OptIn(markerClass = UnstableApi.class)
 public final class CaptionBuilder {
     public interface Callback {
         boolean isCancelled();
@@ -169,11 +198,11 @@ public final class CaptionBuilder {
         }
     }
 
-    public static boolean burnIn(DownloadEntry entry, File input, File output,
+    public static boolean burnIn(Context context, DownloadEntry entry, File input, File output,
                                  Callback callback) throws Exception {
         List<Cue> cues = load(entry);
         if (cues.isEmpty()) return false;
-        burn(input, output, cues, callback);
+        burn(context, input, output, cues, callback);
         return output.isFile() && output.length() > 0;
     }
 
@@ -181,11 +210,168 @@ public final class CaptionBuilder {
                                       Callback callback) throws Exception {
         List<Cue> cues = readSidecar(context, entry);
         if (cues.isEmpty()) return false;
-        burn(input, output, cues, callback);
+        burn(context, input, output, cues, callback);
         return output.isFile() && output.length() > 0;
     }
 
-    private static void burn(File input, File output, List<Cue> cues, Callback callback)
+    private static void burn(Context context, File input, File output, List<Cue> cues,
+                             Callback callback) throws Exception {
+        if (output.exists() && !output.delete()) {
+            throw new IOException("Could not replace caption video");
+        }
+        if (context != null) {
+            try {
+                burnWithTransformer(context, input, output, cues, callback);
+                if (output.isFile() && output.length() > 0) return;
+            } catch (InterruptedException e) {
+                throw e;
+            } catch (Exception ignored) {
+                if (callback != null && callback.isCancelled()) {
+                    throw new InterruptedException("Cancelled");
+                }
+            }
+            if (output.exists() && !output.delete()) {
+                throw new IOException("Could not replace caption video");
+            }
+        }
+        burnLegacy(input, output, cues, callback);
+    }
+
+    private static void burnWithTransformer(Context context, File input, File output,
+                                            List<Cue> cues, Callback callback) throws Exception {
+        int[] size = videoSize(input);
+        if (size[0] <= 0 || size[1] <= 0) throw new IOException("Bad video size");
+        long durationMs = videoDuration(input);
+        int width = Math.min(size[0], 1920);
+        CueOverlay overlay = new CueOverlay(cues, width);
+        List<Effect> videoEffects = new ArrayList<>();
+        videoEffects.add(new OverlayEffect(ImmutableList.<TextureOverlay>of(overlay)));
+        Effects effects = new Effects(Collections.emptyList(), videoEffects);
+        MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(input));
+        EditedMediaItem item = new EditedMediaItem.Builder(mediaItem)
+                .setEffects(effects)
+                .build();
+
+        Handler main = new Handler(Looper.getMainLooper());
+        CountDownLatch done = new CountDownLatch(1);
+        AtomicReference<Exception> failure = new AtomicReference<>();
+        Transformer transformer = new Transformer.Builder(context)
+                .setAudioMimeType(MimeTypes.AUDIO_AAC)
+                .setVideoMimeType(MimeTypes.VIDEO_H264)
+                .addListener(new Transformer.Listener() {
+                    @Override
+                    public void onCompleted(Composition composition, ExportResult result) {
+                        done.countDown();
+                    }
+
+                    @Override
+                    public void onError(Composition composition, ExportResult result,
+                                        ExportException exception) {
+                        failure.set(exception);
+                        done.countDown();
+                    }
+                })
+                .build();
+
+        if (callback != null && callback.isCancelled()) {
+            throw new InterruptedException("Cancelled");
+        }
+        main.post(() -> {
+            try {
+                transformer.start(item, output.getAbsolutePath());
+            } catch (Exception e) {
+                failure.set(e);
+                done.countDown();
+            }
+        });
+
+        ProgressHolder holder = new ProgressHolder();
+        long totalUs = durationMs > 0 ? durationMs * 1000L : 0L;
+        final boolean[] running = {true};
+        Runnable progress = new Runnable() {
+            @Override
+            public void run() {
+                if (!running[0] || done.getCount() == 0) return;
+                int state = transformer.getProgress(holder);
+                if (state == Transformer.PROGRESS_STATE_AVAILABLE && callback != null
+                        && totalUs > 0) {
+                    callback.progress(holder.progress * totalUs / 100L, totalUs);
+                }
+                main.postDelayed(this, 250L);
+            }
+        };
+        main.post(progress);
+
+        try {
+            while (!done.await(200L, TimeUnit.MILLISECONDS)) {
+                if (callback != null && callback.isCancelled()) {
+                    main.post(transformer::cancel);
+                    done.await(2L, TimeUnit.SECONDS);
+                    throw new InterruptedException("Cancelled");
+                }
+            }
+        } finally {
+            running[0] = false;
+            main.removeCallbacks(progress);
+        }
+
+        Exception error = failure.get();
+        if (error != null) throw error;
+        if (!output.isFile() || output.length() == 0) {
+            throw new IOException("Caption export produced no video");
+        }
+    }
+
+    private static int[] videoSize(File input) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(input.getAbsolutePath());
+            int width = intMetadata(retriever, MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+            int height = intMetadata(retriever, MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+            int rotation = intMetadata(retriever, MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+            if (rotation == 90 || rotation == 270) {
+                int swap = width;
+                width = height;
+                height = swap;
+            }
+            return new int[]{width, height};
+        } catch (Exception e) {
+            return new int[]{0, 0};
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private static long videoDuration(File input) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(input.getAbsolutePath());
+            String value = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            return value == null ? 0L : Long.parseLong(value);
+        } catch (Exception e) {
+            return 0L;
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private static int intMetadata(MediaMetadataRetriever retriever, int key) {
+        String value = retriever.extractMetadata(key);
+        if (value == null || value.trim().isEmpty()) return 0;
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private static void burnLegacy(File input, File output, List<Cue> cues, Callback callback)
             throws Exception {
         if (output.exists() && !output.delete()) throw new IOException("Could not replace caption video");
         MediaExtractor video = new MediaExtractor();
@@ -643,6 +829,93 @@ public final class CaptionBuilder {
             }
             canvas.setBitmap(null);
         }
+    }
+
+    private static final class CueOverlay extends BitmapOverlay {
+        private final List<Cue> cues;
+        private final int width;
+        private final LruCache<Integer, Bitmap> cache = new LruCache<>(16);
+        private final Bitmap empty = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        private final OverlaySettings settings = new OverlaySettings.Builder()
+                .setBackgroundFrameAnchor(0f, -0.86f)
+                .setOverlayFrameAnchor(0f, -1f)
+                .build();
+
+        CueOverlay(List<Cue> cues, int width) {
+            this.cues = cues;
+            this.width = width;
+        }
+
+        @Override
+        public Bitmap getBitmap(long presentationTimeUs) {
+            int index = indexAt(cues, presentationTimeUs / 1000L);
+            if (index < 0) return empty;
+            Bitmap cached = cache.get(index);
+            if (cached != null) return cached;
+            Bitmap bitmap = renderStrip(cues.get(index), width);
+            cache.put(index, bitmap);
+            return bitmap;
+        }
+
+        @Override
+        public Size getTextureSize(long presentationTimeUs) {
+            Bitmap bitmap = getBitmap(presentationTimeUs);
+            return new Size(bitmap.getWidth(), bitmap.getHeight());
+        }
+
+        @Override
+        public OverlaySettings getOverlaySettings(long presentationTimeUs) {
+            return settings;
+        }
+    }
+
+    private static int indexAt(List<Cue> cues, long timeMs) {
+        int low = 0;
+        int high = cues.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            Cue cue = cues.get(mid);
+            if (timeMs < cue.startMs) {
+                high = mid - 1;
+            } else if (timeMs >= cue.endMs) {
+                low = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+
+    private static Bitmap renderStrip(Cue cue, int width) {
+        float textSize = Math.max(18f, width * 0.036f);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        paint.setTextSize(textSize);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setColor(Color.WHITE);
+        List<String> lines = wrap(cue.text, paint, width * 0.86f);
+        if (lines.isEmpty()) return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        float lineHeight = textSize * 1.2f;
+        float maxLine = 0f;
+        for (String line : lines) maxLine = Math.max(maxLine, paint.measureText(line));
+        float padX = textSize * 0.75f;
+        float padY = textSize * 0.35f;
+        int bitmapWidth = Math.max(1, Math.min(width, Math.round(maxLine + padX * 2f)));
+        int bitmapHeight = Math.max(1, Math.round(lines.size() * lineHeight + padY * 2f));
+        Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint background = new Paint(Paint.ANTI_ALIAS_FLAG);
+        background.setStyle(Paint.Style.FILL);
+        background.setColor(0x99000000);
+        float radius = textSize * 0.35f;
+        canvas.drawRoundRect(new RectF(0f, 0f, bitmapWidth, bitmapHeight), radius, radius,
+                background);
+        Paint.FontMetrics metrics = paint.getFontMetrics();
+        float baseline = padY - metrics.ascent;
+        for (int i = 0; i < lines.size(); i++) {
+            canvas.drawText(lines.get(i), bitmapWidth / 2f, baseline + i * lineHeight, paint);
+        }
+        return bitmap;
     }
 
     private static Cue active(List<Cue> cues, long timeMs, int[] cursor) {

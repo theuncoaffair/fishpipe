@@ -417,7 +417,7 @@ public final class DownloadService extends Service {
             boolean embedded = false;
             if (hasCaptions(entry) && !Settings.CAPTION_SRT.equals(entry.captionMode)) {
                 try {
-                    embedded = CaptionBuilder.burnIn(entry, temp, burned, captionCallback);
+                    embedded = CaptionBuilder.burnIn(this, entry, temp, burned, captionCallback);
                 } catch (InterruptedException e) {
                     throw e;
                 } catch (Exception e) {

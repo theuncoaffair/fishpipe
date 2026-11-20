@@ -1,5 +1,9 @@
 # What's new
 
+- Embedded captions export faster and more reliably with a new Media3 pipeline and cached caption frames.
+- Caption-embedded videos are now saved with a `_captions` suffix.
+- Removed background clipboard auto-download; manual paste and link detection still work.
+
 - Appearance settings now switch immediately between light, dark, and true AMOLED.
 - Annual pass pricing now follows the region selected in Settings.
 - Annual passes now carry a 12-month expiry, with renewal support.

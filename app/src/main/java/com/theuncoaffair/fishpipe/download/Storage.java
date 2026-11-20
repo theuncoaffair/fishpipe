@@ -67,7 +67,7 @@ public final class Storage {
         if (extension.isEmpty()) extension = ".mp4";
         String base = baseName(videoName);
         if (base.isEmpty()) base = baseName(fileName(entry, "mp4"));
-        String name = base + "_caption" + extension;
+        String name = base + "_captions" + extension;
         String folder = videoFolder(context, entry.localUri, entry);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return saveMediaStore(context, entry, temp, name, "video/mp4", folder, false,

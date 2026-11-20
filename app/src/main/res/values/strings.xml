@@ -324,8 +324,6 @@
     <string name="clipboard_watch_channel">Clipboard link watcher</string>
     <string name="clipboard_watch_title">FishPipe is watching links</string>
     <string name="clipboard_watch_body">Copied TikTok links are downloaded using your default settings.</string>
-    <string name="clipboard_watch_started">Clipboard auto download is on.</string>
-    <string name="clipboard_watch_stopped">Clipboard auto download is off.</string>
     <string name="clipboard_empty">Clipboard is empty.</string>
     <string name="storage_error">Could not save the file to storage.</string>
     <string name="error_generic">Something went wrong.</string>
@@ -392,11 +390,6 @@
     <string name="clipboard_popup_download">Download</string>
     <string name="clipboard_popup_later">Later</string>
     <string name="clipboard_background_limited">Android does not allow FishPipe to read the clipboard while TikTok is in front. FishPipe will check again when you return.</string>
-    <string name="clipboard_channel">Clipboard links</string>
-    <string name="clipboard_notification_title">TikTok link detected</string>
-    <string name="clipboard_notification_body">Download this video with FishPipe or open the app.</string>
-    <string name="clipboard_notification_download">Download video</string>
-    <string name="clipboard_notification_open">Open app</string>
 
     <!-- Insights -->
     <string name="expand_all">Expand all</string>
@@ -487,9 +480,6 @@
     <string name="download_queued_count">Queued %1$d downloads.</string>
     <string name="deleted_count">Deleted %1$d items.</string>
     <string name="drawer_stay_in_app">Floating download button</string>
-    <string name="drawer_auto_download">Auto download copied links</string>
-    <string name="auto_download_links">Auto download copied links</string>
-    <string name="auto_download_links_desc">When a TikTok link is copied, resolve and download it using your default settings.</string>
     <string name="drawer_recommend">Recommend to friends</string>
     <string name="drawer_how">How to download</string>
     <string name="drawer_group">Join feedback group</string>

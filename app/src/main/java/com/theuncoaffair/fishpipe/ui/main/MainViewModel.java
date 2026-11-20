@@ -46,7 +46,6 @@ public final class MainViewModel extends ViewModel {
                 settings.getTheme(),
                 settings.isStayInApp(),
                 settings.isAutoDetect(),
-                settings.isAutoDownload(),
                 license.isProActive(),
                 license.remaining(),
                 downloads.runningCount());
@@ -63,12 +62,6 @@ public final class MainViewModel extends ViewModel {
 
     public void setAutoDetect(boolean value) {
         settings.setAutoDetect(value);
-        ClipboardWatchService.sync(context);
-        refresh();
-    }
-
-    public void setAutoDownload(boolean value) {
-        settings.setAutoDownload(value);
         ClipboardWatchService.sync(context);
         refresh();
     }
