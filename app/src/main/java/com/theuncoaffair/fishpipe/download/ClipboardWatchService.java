@@ -6,11 +6,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -281,6 +286,12 @@ public final class ClipboardWatchService extends Service {
         button.setColorFilter(Color.WHITE);
         button.setContentDescription(localized.getString(R.string.floating_download));
         button.setBackground(floatingBackground(size));
+        button.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setOval(0, 0, view.getWidth(), view.getHeight());
+            }
+        });
         button.setClipToOutline(true);
         button.setPadding(size / 4, size / 4, size / 4, size / 4);
         button.setAlpha(settings.getFloatOpacity());
@@ -322,12 +333,15 @@ public final class ClipboardWatchService extends Service {
         floatingParams = null;
     }
 
-    private GradientDrawable floatingBackground(int size) {
+    private Drawable floatingBackground(int size) {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.OVAL);
         shape.setColor(getColor(R.color.primary));
         shape.setStroke(Math.max(1, size / 42), 0x33FFFFFF);
-        return shape;
+        GradientDrawable mask = new GradientDrawable();
+        mask.setShape(GradientDrawable.OVAL);
+        mask.setColor(Color.WHITE);
+        return new RippleDrawable(ColorStateList.valueOf(0x33FFFFFF), shape, mask);
     }
 
     private void placeInitial(WindowManager.LayoutParams params, Point screen, int size) {
@@ -403,11 +417,10 @@ public final class ClipboardWatchService extends Service {
         if (dismissContainer != null || windowManager == null) return;
         Point screen = screenSize();
         int size = dp(64);
-        int rootWidth = dp(120);
-        int labelGap = dp(6);
+        int rootWidth = dp(140);
+        int slotTop = dp(33);
         int highlightSize = Math.round(size * 1.55f);
-        int highlightInset = Math.max(0, (highlightSize - size) / 2);
-        int rootHeight = highlightSize + labelGap + dp(20);
+        int rootHeight = slotTop + highlightSize + dp(24);
         dismissSize = size;
 
         ViewDismissTargetBinding binding = ViewDismissTargetBinding.inflate(
@@ -428,7 +441,7 @@ public final class ClipboardWatchService extends Service {
                 PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.START;
         params.x = Math.max(0, screen.x / 2 - rootWidth / 2);
-        params.y = Math.max(0, screen.y / 2 - highlightSize / 2);
+        params.y = Math.max(0, screen.y / 2 - slotTop - size / 2);
         try {
             windowManager.addView(root, params);
         } catch (Exception e) {

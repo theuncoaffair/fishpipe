@@ -210,6 +210,7 @@ public final class PlayerActivity extends BaseActivity {
             if (MediaItem.notEmpty(link)) Ui.shareText(this, link);
             else Ui.toast(this, R.string.share_link_unavailable);
         });
+        binding.playerTiktok.setOnClickListener(v -> openTikTok());
         play.setOnClickListener(v -> togglePlay());
         ImageButton previous = binding.playerPrevious;
         ImageButton next = binding.playerNext;
@@ -486,6 +487,12 @@ public final class PlayerActivity extends BaseActivity {
         lastCaptionText = text;
         captionView.setText(text);
         captionView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    private void openTikTok() {
+        String link = viewModel.getDownloadLink();
+        if (MediaItem.notEmpty(link)) Ui.openUrl(this, link);
+        else Ui.toast(this, R.string.share_link_unavailable);
     }
 
     private void showMore(View anchor) {

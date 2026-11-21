@@ -1,34 +1,14 @@
 # Bug fixes
 
-- Fixed embedded captions not appearing on some saved videos.
-- Fixed the update screen retaining an unused manual download path.
-- Fixed stale language selections for languages that are no longer offered.
-- Fixed light, dark, and AMOLED appearance selections not applying to the running app.
-- Fixed true AMOLED not using pure black surfaces.
-- Fixed the How to download dialog showing an unused OK button and a Cancel label.
-- Fixed the unlock card text not being centered.
-- Fixed captions missing when the primary resolver returned no caption track.
-- Fixed caption and hashtag text ignoring the 75% width limit.
-- Fixed download-option checkboxes sitting too far from their labels.
-- Fixed download options using inconsistent horizontal padding.
-- Fixed creator and batch screens losing their creator header while scrolling.
-- Fixed the photo viewer controls overlapping the metadata panel.
-- Fixed expired annual passes keeping an active session.
-- Fixed slideshow mode being offered for links that have no sound.
-- Fixed the home link field showing an autofill prompt.
-- Fixed inconsistent primary-button corner radii.
-- Fixed embedded captions not appearing on the saved video.
-- Fixed caption-embedding progress resetting after leaving and returning to a video.
-- Fixed the floating download button dismiss area not matching the visible button.
-- Fixed backward hold-seek pausing the video instead of playing audio while seeking.
-- Fixed the creator history menu order and its delete divider.
-- Fixed markdown bullet text sitting too close to the bullet.
-- Fixed the About screen showing duplicate release-note headings.
-- Fixed Open folder not opening the folder that contains the downloaded file.
-- Fixed video playback position and repeat mode resetting between sessions.
-- Fixed story downloads missing a visible Story badge.
+- Fixed the side menu button being invisible in light appearance.
+- Fixed embedded captions not appearing on saved videos.
+- Fixed caption export taking minutes and overheating devices.
 - Fixed the floating dismiss highlight being clipped into a square.
-- Fixed backward hold-seek stepping too fast and distorting audio.
-- Fixed photos-only defaults not selecting all photos in the download sheet.
-- Fixed same-media duplicate checks ignoring SD and HD quality.
-- Fixed expired story links showing a generic error instead of a clear expiry message.
+- Fixed backward hold-seek distorting audio and stepping too fast.
+- Fixed the tracked-creator menu order and its delete divider.
+- Fixed Open folder not opening the folder that contains the download.
+- Fixed missing overflow menus on Downloads and Insights.
+- Fixed expired story links showing a generic error instead of an expiry message.
+- Fixed .srt sidecars being left behind when a video was deleted.
+- Fixed creator and date metadata not collapsing when captions and hashtags are empty.
+- Fixed Select all not switching to Deselect all when every item is selected.

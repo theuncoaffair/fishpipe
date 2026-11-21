@@ -112,6 +112,7 @@ public final class AudioPlayerActivity extends BaseActivity {
 
         binding.audioBack.setOnClickListener(v -> finish());
         binding.audioShare.setOnClickListener(v -> shareAudio(viewModel.getAudioUrl()));
+        binding.audioTiktok.setOnClickListener(v -> openTikTok());
         binding.audioMore.setOnClickListener(this::showMore);
         binding.audioPlay.setOnClickListener(v -> viewModel.toggle());
         ImageButton previous = binding.audioPrevious;
@@ -268,6 +269,12 @@ public final class AudioPlayerActivity extends BaseActivity {
         String link = viewModel.getPageUrl();
         if (TextUtils.isEmpty(link)) link = url;
         if (!TextUtils.isEmpty(link)) Ui.shareText(this, link);
+        else Ui.toast(this, R.string.share_link_unavailable);
+    }
+
+    private void openTikTok() {
+        String link = viewModel.getPageUrl();
+        if (MediaItem.notEmpty(link)) Ui.openUrl(this, link);
         else Ui.toast(this, R.string.share_link_unavailable);
     }
 

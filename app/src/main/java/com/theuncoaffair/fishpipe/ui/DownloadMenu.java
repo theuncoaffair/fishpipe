@@ -102,37 +102,57 @@ public final class DownloadMenu {
                             DownloadDb db, Listener listener) {
         PopupMenu menu = new PopupMenu(context, anchor);
         int openId = 1;
-        int infoId = 2;
-        int shareId = 3;
-        int linkId = 4;
-        int captionId = 5;
-        int hashtagsId = 6;
-        int qualityId = 7;
-        int deleteId = 8;
+        int folderId = 2;
+        int infoId = 3;
+        int shareId = 4;
+        int linkId = 5;
+        int tiktokId = 6;
+        int captionId = 7;
+        int hashtagsId = 8;
+        int qualityId = 9;
+        int deleteId = 10;
         boolean music = DownloadEntry.TYPE_MUSIC.equals(entry.type);
         boolean hasLink = MediaItem.notEmpty(entry.pageUrl);
         if (entry.isComplete()) {
             menu.getMenu().add(0, openId, 0, R.string.open);
+            menu.getMenu().add(0, folderId, 1, R.string.open_folder);
         }
-        menu.getMenu().add(0, infoId, 1, R.string.media_info);
+        menu.getMenu().add(0, infoId, 2, R.string.media_info);
         if (entry.isComplete()) {
-            menu.getMenu().add(0, shareId, 2, R.string.share);
+            menu.getMenu().add(0, shareId, 3, R.string.share);
         }
         if (hasLink) {
-            menu.getMenu().add(0, linkId, 3, R.string.share_link);
+            menu.getMenu().add(0, linkId, 4, R.string.share_link);
+            if (!music) {
+                menu.getMenu().add(0, tiktokId, 5, R.string.open_tiktok);
+            }
         }
-        if (!music) {
-            menu.getMenu().add(0, captionId, 4, R.string.copy_caption);
-            menu.getMenu().add(0, hashtagsId, 5, R.string.copy_hashtags);
+        if (!music && MediaItem.notEmpty(entry.caption)) {
+            menu.getMenu().add(0, captionId, 6, R.string.copy_caption);
+        }
+        if (!music && MediaItem.notEmpty(entry.hashtags)) {
+            menu.getMenu().add(0, hashtagsId, 7, R.string.copy_hashtags);
         }
         if (hasLink) {
-            menu.getMenu().add(0, qualityId, 6, R.string.download_other_quality);
+            menu.getMenu().add(0, qualityId, 8, R.string.download_other_quality);
         }
-        menu.getMenu().add(1, deleteId, 7, R.string.delete);
+        menu.getMenu().add(1, deleteId, 9, R.string.delete);
         MenuDividers.enable(menu.getMenu());
         menu.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == openId) {
                 open(context, entry, listener);
+                return true;
+            }
+            if (item.getItemId() == folderId) {
+                Storage.openFolder(context, entry);
+                return true;
+            }
+            if (item.getItemId() == tiktokId) {
+                if (MediaItem.notEmpty(entry.pageUrl)) {
+                    Ui.openUrl(context, entry.pageUrl);
+                } else {
+                    Ui.toast(context, R.string.share_link_unavailable);
+                }
                 return true;
             }
             if (item.getItemId() == infoId) {

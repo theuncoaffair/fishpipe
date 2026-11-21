@@ -113,7 +113,7 @@ public final class AudioPlayerViewModel extends ViewModel {
         public void run() {
             if (!holdActive) return;
             updateHoldSeek();
-            handler.postDelayed(this, 80L);
+            handler.postDelayed(this, 500L);
         }
     };
 
@@ -498,7 +498,7 @@ public final class AudioPlayerViewModel extends ViewModel {
     private void updateHoldSeek() {
         if (!holdActive || player == null || !prepared || durationMs <= 0) return;
         long elapsed = clock.nowMillis() - holdDownAt;
-        int delta = (int) Math.min((long) durationMs, elapsed * 4L);
+        int delta = (int) Math.min((long) durationMs, elapsed * 2L);
         int target = holdStartPos + holdDir * delta;
         if (target < 0) target = 0;
         if (target > durationMs) target = durationMs;

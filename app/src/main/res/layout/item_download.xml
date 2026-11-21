@@ -87,6 +87,46 @@
                     android:textStyle="bold"
                     android:visibility="gone" />
 
+                <LinearLayout
+                    android:id="@+id/format_badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="@dimen/space_2"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/quality_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_photo_counter"
+                        android:paddingStart="@dimen/space_4"
+                        android:paddingTop="1dp"
+                        android:paddingEnd="@dimen/space_4"
+                        android:paddingBottom="1dp"
+                        android:textColor="@color/white"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/slideshow_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_2"
+                        android:background="@drawable/bg_photo_counter"
+                        android:paddingStart="@dimen/space_4"
+                        android:paddingTop="1dp"
+                        android:paddingEnd="@dimen/space_4"
+                        android:paddingBottom="1dp"
+                        android:text="@string/slideshow_label"
+                        android:textColor="@color/white"
+                        android:textSize="7sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
                 <ImageView
                     android:id="@+id/type_icon"
                     android:layout_width="20dp"

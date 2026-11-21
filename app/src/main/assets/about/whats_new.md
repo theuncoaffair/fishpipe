@@ -1,25 +1,14 @@
 # What's new
 
-- Embedded captions export faster and more reliably with a new Media3 pipeline and cached caption frames.
-- Caption-embedded videos are now saved with a `_captions` suffix.
-- Removed background clipboard auto-download; manual paste and link detection still work.
-- The floating shortcut now reads the clipboard only when you open it.
-- Language settings now list only fully translated languages: English and Vietnamese.
-- Appearance settings now switch immediately between light, dark, and true AMOLED.
-- Annual pass pricing now follows the region selected in Settings.
-- Annual passes now carry a 12-month expiry, with renewal support.
-- Story and slideshow downloads are labelled in players, cards, and history.
-- Links without audio no longer offer a slideshow option.
-- The bottom navigation no longer covers the last row of content.
-- Refreshed the FishPipe brand blue and button shapes.
-- Embedded captions now render reliably into the saved video.
-- Caption embedding keeps running when FishPipe is in the background, restores accurate progress when you return, and alerts you when it finishes.
-- About now shows release notes without duplicate section headings.
-- The Pro card is centered and easier to scan.
-- Videos now resume from your last playback position and keep your repeat mode.
-- Open folder now opens the actual download folder in your file manager.
-- Story downloads show a Story badge beside embedded-caption badges.
-- Media info now shows whether a video was downloaded in SD or HD.
-- Photos-only downloads now select every photo in a photo link.
-- Refreshed the FishPipe logo with a cleaner outline mark.
-- FishPipe can now check for updates and install verified releases in-app.
+- Open folder now launches your file manager directly to the folder that contains the selected download.
+- Refreshed the FishPipe logo across the app and added 1080x1080 PNG and SVG exports.
+- Restored the overflow menus on the Downloads and Insights headers.
+- Added a TikTok button to video, audio, and photo viewers.
+- Added HD, SD, slideshow, and story badges to download history.
+- Added Analyze to tracked-creator menus and cleaned up the menu order.
+- Embedded captions now appear on saved videos, and caption export is much faster.
+- Backward hold-seek now moves two seconds per second with smooth audio.
+- Deleting a video now also removes its downloaded .srt sidecar.
+- FishPipe now checks for updates when the app launches.
+- The floating dismiss control is now a true circle with clipped ripple and shadow.
+- The server fake-data generator now lives in the fishtape package.

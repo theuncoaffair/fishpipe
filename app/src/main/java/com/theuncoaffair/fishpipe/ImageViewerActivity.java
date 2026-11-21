@@ -78,6 +78,7 @@ public final class ImageViewerActivity extends BaseActivity {
                 Ui.toast(this, R.string.share_link_unavailable);
             }
         });
+        binding.imageTiktok.setOnClickListener(v -> openTikTok());
         binding.imageMore.setOnClickListener(this::showMore);
 
         ImageViewerUiState initial = viewModel.getState().getValue();
@@ -164,6 +165,15 @@ public final class ImageViewerActivity extends BaseActivity {
     private DownloadEntry currentEntry() {
         ImageViewerUiState state = viewModel.getState().getValue();
         return state == null ? null : state.entry;
+    }
+
+    private void openTikTok() {
+        DownloadEntry entry = currentEntry();
+        if (entry != null && MediaItem.notEmpty(entry.pageUrl)) {
+            Ui.openUrl(this, entry.pageUrl);
+        } else {
+            Ui.toast(this, R.string.share_link_unavailable);
+        }
     }
 
     private void showMore(View anchor) {

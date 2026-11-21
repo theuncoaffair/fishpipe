@@ -243,7 +243,7 @@ public final class CaptionBuilder {
         if (size[0] <= 0 || size[1] <= 0) throw new IOException("Bad video size");
         long durationMs = videoDuration(input);
         int width = Math.min(size[0], 1920);
-        CueOverlay overlay = new CueOverlay(cues, width);
+        CueOverlay overlay = new CueOverlay(cues, width, size[1]);
         List<Effect> videoEffects = new ArrayList<>();
         videoEffects.add(new OverlayEffect(ImmutableList.<TextureOverlay>of(overlay)));
         Effects effects = new Effects(Collections.emptyList(), videoEffects);
@@ -834,16 +834,28 @@ public final class CaptionBuilder {
     private static final class CueOverlay extends BitmapOverlay {
         private final List<Cue> cues;
         private final int width;
+        private final int height;
         private final LruCache<Integer, Bitmap> cache = new LruCache<>(16);
-        private final Bitmap empty = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        private final Bitmap empty;
         private final OverlaySettings settings = new OverlaySettings.Builder()
-                .setBackgroundFrameAnchor(0f, -0.86f)
+                .setBackgroundFrameAnchor(0f, -0.94f)
                 .setOverlayFrameAnchor(0f, -1f)
                 .build();
 
-        CueOverlay(List<Cue> cues, int width) {
+        CueOverlay(List<Cue> cues, int width, int videoHeight) {
             this.cues = cues;
-            this.width = width;
+            this.width = Math.max(1, width);
+            float textSize = Math.max(18f, this.width * 0.036f);
+            Paint measure = new Paint(Paint.ANTI_ALIAS_FLAG);
+            measure.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            measure.setTextSize(textSize);
+            int maxLines = 1;
+            for (Cue cue : cues) {
+                maxLines = Math.max(maxLines, wrap(cue.text, measure, this.width * 0.86f).size());
+            }
+            int minHeight = Math.round(maxLines * textSize * 1.2f + textSize * 0.7f);
+            this.height = Math.max(minHeight, Math.round(videoHeight * 0.30f));
+            this.empty = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888);
         }
 
         @Override
@@ -852,15 +864,14 @@ public final class CaptionBuilder {
             if (index < 0) return empty;
             Bitmap cached = cache.get(index);
             if (cached != null) return cached;
-            Bitmap bitmap = renderStrip(cues.get(index), width);
+            Bitmap bitmap = renderStrip(cues.get(index), width, height);
             cache.put(index, bitmap);
             return bitmap;
         }
 
         @Override
         public Size getTextureSize(long presentationTimeUs) {
-            Bitmap bitmap = getBitmap(presentationTimeUs);
-            return new Size(bitmap.getWidth(), bitmap.getHeight());
+            return new Size(width, height);
         }
 
         @Override
@@ -886,7 +897,7 @@ public final class CaptionBuilder {
         return -1;
     }
 
-    private static Bitmap renderStrip(Cue cue, int width) {
+    private static Bitmap renderStrip(Cue cue, int width, int height) {
         float textSize = Math.max(18f, width * 0.036f);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
@@ -894,26 +905,28 @@ public final class CaptionBuilder {
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setColor(Color.WHITE);
         List<String> lines = wrap(cue.text, paint, width * 0.86f);
-        if (lines.isEmpty()) return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        if (lines.isEmpty()) return bitmap;
         float lineHeight = textSize * 1.2f;
         float maxLine = 0f;
         for (String line : lines) maxLine = Math.max(maxLine, paint.measureText(line));
         float padX = textSize * 0.75f;
         float padY = textSize * 0.35f;
-        int bitmapWidth = Math.max(1, Math.min(width, Math.round(maxLine + padX * 2f)));
-        int bitmapHeight = Math.max(1, Math.round(lines.size() * lineHeight + padY * 2f));
-        Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+        Paint.FontMetrics metrics = paint.getFontMetrics();
+        float bottomBaseline = height - padY - metrics.descent;
+        float topBaseline = bottomBaseline - (lines.size() - 1) * lineHeight;
+        float left = width / 2f - maxLine / 2f - padX;
+        float right = width / 2f + maxLine / 2f + padX;
+        float top = topBaseline + metrics.ascent - padY;
+        float bottom = bottomBaseline + metrics.descent + padY;
         Canvas canvas = new Canvas(bitmap);
         Paint background = new Paint(Paint.ANTI_ALIAS_FLAG);
         background.setStyle(Paint.Style.FILL);
         background.setColor(0x99000000);
         float radius = textSize * 0.35f;
-        canvas.drawRoundRect(new RectF(0f, 0f, bitmapWidth, bitmapHeight), radius, radius,
-                background);
-        Paint.FontMetrics metrics = paint.getFontMetrics();
-        float baseline = padY - metrics.ascent;
+        canvas.drawRoundRect(new RectF(left, top, right, bottom), radius, radius, background);
         for (int i = 0; i < lines.size(); i++) {
-            canvas.drawText(lines.get(i), bitmapWidth / 2f, baseline + i * lineHeight, paint);
+            canvas.drawText(lines.get(i), width / 2f, topBaseline + i * lineHeight, paint);
         }
         return bitmap;
     }

@@ -85,6 +85,8 @@ public final class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
+        binding.toolbar.setNavigationContentDescription(R.string.menu);
         applySystemBarInsets(binding.mainContent, false);
         applyBottomSystemBarInset(binding.bottomNav);
         applyBottomContentInset();

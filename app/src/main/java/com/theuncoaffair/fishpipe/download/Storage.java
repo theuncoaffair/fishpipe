@@ -188,6 +188,7 @@ public final class Storage {
 
     public static void delete(Context context, String localUri) {
         if (localUri == null || localUri.isEmpty()) return;
+        deleteCaptionSidecar(context, localUri);
         try {
             Uri uri = Uri.parse(localUri);
             if ("content".equals(uri.getScheme())) {
@@ -198,6 +199,44 @@ public final class Storage {
                     //noinspection ResultOfMethodCallIgnored
                     file.delete();
                 }
+                scan(context, file);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static void deleteCaptionSidecar(Context context, String localUri) {
+        try {
+            String name = displayName(context, localUri);
+            if (name.isEmpty() || name.toLowerCase(Locale.US).endsWith(".srt")) return;
+            String sidecar = baseName(name) + ".srt";
+            Uri uri = Uri.parse(localUri);
+            if ("content".equals(uri.getScheme())) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return;
+                String folder = null;
+                try (Cursor cursor = context.getContentResolver().query(uri,
+                        new String[]{MediaStore.MediaColumns.RELATIVE_PATH}, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int index = cursor.getColumnIndex(MediaStore.MediaColumns.RELATIVE_PATH);
+                        if (index >= 0) folder = cursor.getString(index);
+                    }
+                } catch (Exception ignored) {
+                }
+                if (folder == null) return;
+                Uri files = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
+                String selection = MediaStore.MediaColumns.RELATIVE_PATH + "=? AND "
+                        + MediaStore.MediaColumns.DISPLAY_NAME + "=?";
+                context.getContentResolver().delete(files, selection,
+                        new String[]{folder, sidecar});
+                return;
+            }
+            String path = uri.getPath() == null ? localUri : uri.getPath();
+            File parent = new File(path).getParentFile();
+            if (parent == null) return;
+            File file = new File(parent, sidecar);
+            if (file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete();
                 scan(context, file);
             }
         } catch (Exception ignored) {

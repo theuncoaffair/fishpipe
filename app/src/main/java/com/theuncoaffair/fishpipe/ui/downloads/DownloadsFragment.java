@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.theuncoaffair.fishpipe.CreatorVideosActivity;
+import com.theuncoaffair.fishpipe.MainActivity;
 import com.theuncoaffair.fishpipe.R;
+import com.theuncoaffair.fishpipe.analytics.InsightsRepository;
 import com.theuncoaffair.fishpipe.data.CreatorInfo;
 import com.theuncoaffair.fishpipe.data.DownloadDb;
 import com.theuncoaffair.fishpipe.data.DownloadEntry;
@@ -293,23 +295,31 @@ public final class DownloadsFragment extends Fragment {
 
     private void showCreatorMenu(View anchor, CreatorInfo creator) {
         PopupMenu popup = new PopupMenu(requireContext(), anchor);
-        int openId = 1;
-        int profileId = 2;
-        int shareId = 3;
-        int deleteId = 4;
-        popup.getMenu().add(0, openId, 0, R.string.open);
-        popup.getMenu().add(0, profileId, 1, R.string.insights_open_profile);
-        popup.getMenu().add(0, shareId, 2, R.string.share_link);
-        popup.getMenu().add(1, deleteId, 3, R.string.delete);
+        int profileId = 1;
+        int analyzeId = 2;
+        int openId = 3;
+        int shareId = 4;
+        int deleteId = 5;
+        String profileUrl = "https://www.tiktok.com/@" + creator.name;
+        popup.getMenu().add(0, profileId, 0, R.string.insights_open_profile);
+        popup.getMenu().add(0, analyzeId, 1, R.string.insights_analyze);
+        popup.getMenu().add(0, openId, 2, R.string.open);
+        popup.getMenu().add(0, shareId, 3, R.string.share_link);
+        popup.getMenu().add(1, deleteId, 4, R.string.delete);
         MenuDividers.enable(popup.getMenu());
         popup.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == profileId) {
-                Ui.openUrl(requireContext(), "https://www.tiktok.com/@" + creator.name);
+                Ui.openUrl(requireContext(), profileUrl);
+            } else if (id == analyzeId) {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).openInsights(
+                            profileUrl, InsightsRepository.MODE_CREATOR);
+                }
             } else if (id == openId) {
                 openCreator(creator);
             } else if (id == shareId) {
-                Ui.shareText(requireContext(), "https://www.tiktok.com/@" + creator.name);
+                Ui.shareText(requireContext(), profileUrl);
             } else if (id == deleteId) {
                 DeleteDialogs.show(requireContext(), true,
                         () -> viewModel.deleteCreator(creator, true),

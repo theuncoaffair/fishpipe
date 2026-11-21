@@ -102,6 +102,18 @@ public final class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.
         return items.size();
     }
 
+    private static String qualityLabel(Context context, DownloadEntry entry) {
+        if (!DownloadEntry.TYPE_VIDEO.equals(entry.type)) return "";
+        if (DownloadEntry.QUALITY_HD.equals(entry.quality)) {
+            return context.getString(R.string.quality_hd);
+        }
+        if (DownloadEntry.QUALITY_SD.equals(entry.quality)) {
+            return context.getString(R.string.quality_sd);
+        }
+        String title = entry.title == null ? "" : entry.title.trim();
+        return title.endsWith(" HD") ? context.getString(R.string.quality_hd) : "";
+    }
+
     private static boolean same(DownloadEntry a, DownloadEntry b) {
         return a.rowId == b.rowId
                 && a.status.equals(b.status)
@@ -163,6 +175,12 @@ public final class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.
             binding.captionBadge.setVisibility(Settings.CAPTION_EMBED.equals(entry.captionMode)
                     ? View.VISIBLE : View.GONE);
             binding.storyBadge.setVisibility(entry.story ? View.VISIBLE : View.GONE);
+            String quality = qualityLabel(context, entry);
+            binding.qualityBadge.setText(quality);
+            binding.qualityBadge.setVisibility(quality.isEmpty() ? View.GONE : View.VISIBLE);
+            binding.slideshowBadge.setVisibility(entry.slideshow ? View.VISIBLE : View.GONE);
+            binding.formatBadges.setVisibility(quality.isEmpty() && !entry.slideshow
+                    ? View.GONE : View.VISIBLE);
 
             if (DownloadEntry.TYPE_MUSIC.equals(entry.type)) {
                 binding.typeIcon.setImageResource(R.drawable.ic_music);
