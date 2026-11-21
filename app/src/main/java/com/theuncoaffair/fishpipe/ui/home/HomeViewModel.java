@@ -268,7 +268,9 @@ public final class HomeViewModel extends ViewModel {
                 || cause instanceof SocketTimeoutException) {
             return HomeUiState.Error.NETWORK;
         }
-        if (LinkUtils.isStory(query) || LinkUtils.isStory(resolver.findUrl(query))) {
+        String found = resolver.findUrl(query);
+        if (LinkUtils.isStory(query) || LinkUtils.isStory(found)
+                || LinkUtils.isStory(LinkUtils.expanded(found))) {
             return HomeUiState.Error.STORY_EXPIRED;
         }
         return HomeUiState.Error.RESOLVE_FAILED;

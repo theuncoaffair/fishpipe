@@ -80,6 +80,16 @@
             app:tint="@color/white" />
 
         <ImageButton
+            android:id="@+id/photo_tiktok"
+            android:layout_width="@dimen/touch"
+            android:layout_height="@dimen/touch"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/open_tiktok"
+            android:padding="@dimen/space_10"
+            android:src="@drawable/ic_tiktok"
+            app:tint="@color/white" />
+
+        <ImageButton
             android:id="@+id/photo_more"
             android:layout_width="@dimen/touch"
             android:layout_height="@dimen/touch"

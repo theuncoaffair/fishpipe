@@ -297,15 +297,11 @@ public final class DownloadsFragment extends Fragment {
         PopupMenu popup = new PopupMenu(requireContext(), anchor);
         int profileId = 1;
         int analyzeId = 2;
-        int openId = 3;
-        int shareId = 4;
-        int deleteId = 5;
+        int deleteId = 3;
         String profileUrl = "https://www.tiktok.com/@" + creator.name;
         popup.getMenu().add(0, profileId, 0, R.string.insights_open_profile);
         popup.getMenu().add(0, analyzeId, 1, R.string.insights_analyze);
-        popup.getMenu().add(0, openId, 2, R.string.open);
-        popup.getMenu().add(0, shareId, 3, R.string.share_link);
-        popup.getMenu().add(1, deleteId, 4, R.string.delete);
+        popup.getMenu().add(1, deleteId, 2, R.string.delete);
         MenuDividers.enable(popup.getMenu());
         popup.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -316,10 +312,6 @@ public final class DownloadsFragment extends Fragment {
                     ((MainActivity) getActivity()).openInsights(
                             profileUrl, InsightsRepository.MODE_CREATOR);
                 }
-            } else if (id == openId) {
-                openCreator(creator);
-            } else if (id == shareId) {
-                Ui.shareText(requireContext(), profileUrl);
             } else if (id == deleteId) {
                 DeleteDialogs.show(requireContext(), true,
                         () -> viewModel.deleteCreator(creator, true),

@@ -72,6 +72,7 @@ public final class PhotoPlayerActivity extends BaseActivity {
         binding.photoPrevious.setOnClickListener(v -> slide(-1));
         binding.photoNext.setOnClickListener(v -> slide(1));
         binding.photoShare.setOnClickListener(v -> share());
+        binding.photoTiktok.setOnClickListener(v -> openTikTok());
         binding.photoMore.setOnClickListener(this::showMore);
 
         gestures = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
@@ -162,6 +163,13 @@ public final class PhotoPlayerActivity extends BaseActivity {
     private void share() {
         String link = link();
         if (MediaItem.notEmpty(link)) Ui.shareText(this, link);
+    }
+
+    private void openTikTok() {
+        MediaItem item = currentItem();
+        String pageUrl = item == null ? "" : item.pageUrl;
+        if (MediaItem.notEmpty(pageUrl)) Ui.openUrl(this, pageUrl);
+        else Ui.toast(this, R.string.share_link_unavailable);
     }
 
     private String link() {

@@ -113,6 +113,7 @@ public final class MainActivity extends BaseActivity {
         requestPermissions();
         if (Diagnostics.hasPendingCrash(this)) showCrashDialog();
         else if (!deepLinkHandled) showWhatsNewIfNeeded();
+        else UpdatePrompt.check(this);
         viewModel.startDownloads();
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -373,13 +374,13 @@ public final class MainActivity extends BaseActivity {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.crash_title)
                 .setMessage(R.string.crash_message)
-                .setPositiveButton(R.string.share_log, (dialog, which) -> {
-                    Diagnostics.share(this);
+                .setPositiveButton(R.string.share_log, (dialog, which) ->
+                        Diagnostics.share(this))
+                .setNegativeButton(R.string.close, null)
+                .setOnDismissListener(dialog -> {
                     Diagnostics.markCrashReported(this);
+                    UpdatePrompt.check(this);
                 })
-                .setNegativeButton(R.string.close, (dialog, which) ->
-                        Diagnostics.markCrashReported(this))
-                .setOnCancelListener(dialog -> Diagnostics.markCrashReported(this))
                 .show();
     }
 
