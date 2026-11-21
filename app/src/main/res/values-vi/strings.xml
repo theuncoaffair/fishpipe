@@ -303,6 +303,7 @@
     <string name="error_generic">Đã xảy ra lỗi.</string>
     <string name="custom_resolver_invalid">Nhập URL HTTPS hợp lệ.</string>
     <string name="open_folder">Mở thư mục</string>
+    <string name="open_folder_failed">Không thể mở trình quản lý tệp cho thư mục đó.</string>
     <string name="open_with">Mở bằng</string>
     <string name="share_via">Chia sẻ qua</string>
     <string name="select_quality">Chọn chất lượng</string>

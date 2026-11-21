@@ -329,6 +329,7 @@
     <string name="error_generic">Something went wrong.</string>
     <string name="custom_resolver_invalid">Enter a valid HTTPS URL.</string>
     <string name="open_folder">Open folder</string>
+    <string name="open_folder_failed">Couldn\'t open a file manager for that folder.</string>
     <string name="open_with">Open with</string>
     <string name="share_via">Share via</string>
     <string name="select_quality">Select quality</string>

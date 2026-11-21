@@ -282,8 +282,7 @@ public final class AudioPlayerViewModel extends ViewModel {
         if (holdSpeedMode) {
             if (!player.isPlaying()) start();
         } else {
-            if (holdWasPlaying) pause();
-            else start();
+            if (!player.isPlaying()) start();
             handler.post(holdTick);
         }
         publish();

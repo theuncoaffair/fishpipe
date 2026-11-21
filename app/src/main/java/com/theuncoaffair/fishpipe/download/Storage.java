@@ -414,7 +414,7 @@ public final class Storage {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(intent);
         } catch (Exception e) {
-            Ui.toast(context, R.string.file_not_found);
+            Ui.toast(context, R.string.open_folder_failed);
         }
     }
 
